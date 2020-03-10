@@ -1,2 +1,2 @@
-# jsBoost
-The jsBoost for use freely and optimized applications
+# jsHunt
+The jsHunt for use freely and optimized applications
