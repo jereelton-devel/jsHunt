@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+ 
+<head>
+  <meta charset="utf-8">
+  <title>Jquery TESTES</title>
+	<style>
+	    *{
+	        font-family:"Century Gothic", Arial;
+	        font-size:20px
+	    }
+	    input[type="text"]{
+	        width:100%;
+	        border:solid 1px
+	    }
+	     
+	    ul{
+	        padding:0;;
+	        margin:0
+	    }
+	     
+	    ul li{
+	        list-style:none;
+	        border:dashed 1px;
+	        padding:5px
+	    }
+	</style>
+
+</head>
+<body>
+<div>
+	Filtrar lista:<br/>
+    <input type="text" id="txtBusca" placeholder="Digite aqui um valor para filtrar..."/>
+    <ul id="ulItens">
+        <li>Feijão</li>
+        <li>Arroz</li>
+        <li>Farinha</li>
+        <li>Açúcar</li>
+        <li>Macarrão</li>
+    </ul>
+</div>
+<div>
+	<label data-name-for for="data-name--id" id="label">Nome</label>
+	<input data-name-id type="text" name="data-name--id" id="data-name--id" value="Nome" />
+	<input data-name-type type="hidden" name="data-name--type" id="data-name--type" value="" />
+	<input data-name-term type="hidden" name="data-name--term" id="data-name--term" value="" />
+</div>
+
+<script src="jquery.js"></script>
+
+<script>
+$(function(){
+
+	$test1 = $("#data-name--id");
+	$test2 = $('[data-name-type]');
+	$test3 = $('[data-name-term]');
+
+	$test1.keyup(function(e){
+		if(e.keyCode == 13) {
+			console.log("[ENTER]");
+			return;
+		}
+
+		if($test1.val().length >= 2) {
+			console.log($test1.val());
+		}
+	});
+
+	$('[data-name-for]').click(function() {
+		$test1.val($('[data-name-for]'));
+	});
+	
+	if($test1.val()) {
+	
+		console.log("test1", $test1.val()+"1");
+		$test2.val($test1.val());
+		$test3.val($test2.val());
+		$test1.val('');
+		console.log("test1", $test1.val()+"1");
+		console.log("test2", $test2.val()+"2");
+		console.log("test3", $test3.val()+"3");
+
+	} else {
+
+		console.log("Vazio");
+	}
+	
+});
+
+$(function(){
+    $("#txtBusca").keyup(function(){
+        var texto = $(this).val();
+         
+        $("#ulItens li").css("display", "block");
+        $("#ulItens li").each(function(){
+            if($(this).text().toUpperCase().indexOf(texto.toUpperCase()) < 0)
+               $(this).css("display", "none");
+        });
+    });
+});
+
+</script>
+
+</body>
+</html>
