@@ -61,6 +61,25 @@ const jsHunt = (function(selector, args) {
         return err;
     }
 
+    getData = function(a, e) {
+        switch(a) {
+            case "undefined":
+                return e;
+            break;
+            case "text":
+                return e.text;
+            break;
+            case "textContent":
+                return e.textContent;
+            break;
+            case "value":
+                return e.value;
+            break;
+            default:
+                throw err = "Invalid argument [" + a + "] for getData !";
+        }
+    }
+
     on = function(ev, callback) {
         let _sel = sel;
         let keys = Object.keys(_sel);
@@ -71,13 +90,15 @@ const jsHunt = (function(selector, args) {
                     keys.forEach(function(index) {
                         _sel[index].addEventListener("click", function(e){
                             e.preventDefault();
-                            callback(this.text || null);
+                            console.log("on.click-1", this.text);
+                            callback((args === undefined) ? null : getData(args.rsp, _sel[index]));
                             //console.log("on.click-1", _sel[index], this.text.trim(), keys, index);
                         });
                     }) : (_sel) ?
                         _sel.addEventListener("click", function(e){
                             e.preventDefault();
-                            callback(this.text || null);
+                            console.log("on.click-2", this.text, this.textContent);
+                            callback((args === undefined) ? null : getData(args.rsp, _sel));
                             //console.log("on.click-2", _sel, (this.text) ? this.text.trim() : null);
                         }) : console.error("on.click", typeof _sel, _sel.length, _sel);
                 break;
@@ -333,11 +354,11 @@ const jsHunt = (function(selector, args) {
 
 //No Conflict Resolved
 var _jsHunt = window.jsHunt,
-    _$$      = window.$$;
+    _jH     = window.jH;
 
 jsHunt.noConflict = function( digger ) {
-    if(window.$$ === jsHunt) {
-        window.$$ = _$$;
+    if(window.jH === jsHunt) {
+        window.jH = _jH;
     }
     if(digger && window.jsHunt === jsHunt) {
         window.jsHunt = _jsHunt;
@@ -348,5 +369,5 @@ jsHunt.noConflict = function( digger ) {
 jsHunt.noConflict();
 
 if ( typeof noGlobal === typeof undefined ) {
-    window.jsHunt = window.$$ = jsHunt;
+    window.jsHunt = window.jH = jsHunt;
 }

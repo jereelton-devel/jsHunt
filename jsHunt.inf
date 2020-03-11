@@ -1,0 +1,74 @@
+
+[Sobre o jsHunt]
+
+O jsHunt é uma biblioteca javascript criada para otimizar o tempo de desenvolvimento front-end. Como é de se esperar de uma API, ela possui uma estrutura de trabalho e fluxo de execução otimizados e que requer pouca codificação para uso dos seus componentes.
+
+[Como usar]
+
+# Carregando o jsHunt
+Para verificar ou executar se o jsHunt esta carregado corretamente use a seguinte instrução:
+
+	jsHunt().loaded(callback function);
+
+Exemplo:
+	jsHunt().loaded(function() {
+		/*Your Code Here*/
+	});
+	
+[Registrar Eventos]
+
+# Mouse
+Para adicionar um evento de click ou change em um elemento, basta registra-lo no DOM com a seguinte instrução:
+	
+	jsHunt("element").on("event", callback function(response));
+	
+Exemplo:
+	jsHunt("#bt_open_modal").on("click", function(rsp){
+		/*Your Code Hede*/
+	});
+
+Nesse caso podemos utilizar elementos selecionados pelos seletores css e html5 (data-labels-set), como segue abaixo:
+	> Seletor CSS para classes: .css_class
+	
+		jsHunt(".css_class").on("change", changeBackColor());
+		
+	Dessa forma todos os elementos da página que estão nomeados com a classe css_class sofrerão os efeitos.
+	
+	> Seletor CSS para id: #css_id
+	
+		jsHunt("#css_id").on("click", userSearch());
+		
+	Com o uso de id, você pode garantir que apenas um elemento da pagina tera uma função registrada e especifica para ele.
+	
+	> Data Label HTML: [data-label-item]
+	
+		jsHunt("[data-label-item]").on("click", function(rsp){
+			/*Your Code Here*/
+		});
+	
+	Com o uso de data-label podemos selecionar todos os elementos de uma lista de itens por exemplo, uma lista de paginação e registrar eventos para cada um dos elementos.
+	
+	> Argumentos aceitos
+	
+	O jsHunt aceita um segundo parametro, que deve ser um conjunto de argumentos previamente definidos e aceitos pela biblioteca. Isso é abordado com mais detalhes em [CRIAR REFERENCIA], porém aqui vai uma breve explicação do seu funcionamento.
+	
+		jsHunt("#css_id", {btn_rsp: "text"}).on("click", callback function(rsp));
+		
+	Nesse caso voce diz ao jsHunt que o conjunto de parametros como segundo argumento contem o valor do botao que sera clicado, ou seja, element.text, que em outras palavras obtem o texto contido no elemento html. Esse texto é retornado no callback passado como parametro para a função on.click, o qual pode ser capturado no parametro de retorno da função on.click, expresso dentro da declaração function(rsp).
+	
+	[IMPORTANTE]
+	!Essa configuração é opcional, e somente deve ser usada quando se quer capturar algo do elemento onde o evento esta sendo aplicado.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

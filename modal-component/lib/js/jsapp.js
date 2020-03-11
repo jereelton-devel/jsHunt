@@ -48,7 +48,7 @@ jsHunt().loaded(function() {
 	});
 
 	// Current Item
-	jsHunt("[a-item-modal]").on("click", function(index){
+	jsHunt("[a-item-modal]", {rsp: "text"}).on("click", function(index){
 		var midia = "resources/img/image"+index+".jpg";
 		jsHunt("#img_modal").attr("src", midia).fadeIn();
 		
