@@ -93,3 +93,9 @@
 	float: left;
 	margin-top: -3px;
 }
+.red-color {
+	color: #FF0000;
+}
+.blue-color {
+	color: #0000FF;
+}

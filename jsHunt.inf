@@ -57,11 +57,31 @@ Nesse caso podemos utilizar elementos selecionados pelos seletores css e html5 (
 	Nesse caso voce diz ao jsHunt que o conjunto de parametros como segundo argumento contem o valor do botao que sera clicado, ou seja, element.text, que em outras palavras obtem o texto contido no elemento html. Esse texto é retornado no callback passado como parametro para a função on.click, o qual pode ser capturado no parametro de retorno da função on.click, expresso dentro da declaração function(rsp).
 	
 	[IMPORTANTE]
-	!Essa configuração é opcional, e somente deve ser usada quando se quer capturar algo do elemento onde o evento esta sendo aplicado.
-	
-	
-	
-	
+	!Essa configuração é opcional, e deve ser usada quando a intenção é capturar algum dado do elemento onde o evento esta sendo aplicado.
+
+q = document.querySelectorAll("#div_tests");
+q = document.querySelectorAll("#div_tests p");
+q.length
+q.forEach(function(i){console.log(i.children)});
+q.forEach(function(i){ i.className = "red-color" });
+
+jsHunt("body").nodeChild("h3").addClass("blue-color");
+
+jsHunt("#div_tests").nodeChild("p").addClass("red-color");
+
+jsHunt("#div_tests").nodeChild("p").addClass("red-color", 1);
+
+jsHunt("#div_tests").nodeChild("p").resetStyle();
+
+jsHunt("#div_tests").nodeChild("p").resetStyle(1);
+
+jsHunt("#div_tests").hunter("p").addClass("red-color");
+
+jsHunt().hunter("p").addClass("blue-color");
+
+jsHunt(".page-link").nodeParent(".page-item").addClass("active");
+
+jsHunt(".page-link").nodeParent(".page-item").addClass("active", 1);
 	
 	
 	

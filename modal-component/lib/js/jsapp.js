@@ -27,7 +27,7 @@ function closeModal(context) {
 	//jsHunt("#img_modal").attr("src", "");
 }
 
-jsHunt().loaded(function() {
+jsHunt().loaded(function() {console.log("loaded");
 
 	// Button Open Modal
 	jsHunt("#bt_open_modal").on("click", function(rsp){

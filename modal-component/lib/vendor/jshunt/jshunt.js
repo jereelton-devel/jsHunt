@@ -1,356 +1,446 @@
 
-const jsHunt = (function(selector, args) {
-        
-    window.userAgent = navigator.userAgent.toLowerCase();
-    window.selector  = selector;
-    window.args      = args;
-    
-    (function() {
+/*
+* jsHunt Javascript Library - 2020 (by JOTICODE)
+*/
+
+(function(){
+
+    const jsHunt = function(_selector, _args) {
+
+        if(!(this instanceof jsHunt)) {
+            return new jsHunt(_selector, _args);
+        }
+
+        this.selector  = _selector;
+        this.args      = _args;
 
         except = function(msg) {
             throw err = msg;
             return err;
-        }
+        };
 
         try {
-            if(window.selector) {
-
-                if(window.selector.indexOf("#") === 0) {
-                    window.sel = document.getElementById(window.selector.replace("#", ""));
-                } else if(window.selector.indexOf("\.") === 0) {
-                    window.sel = document.getElementsByClassName(window.selector.replace("\.", ""));
-                } else if(window.selector.indexOf("\[") === 0) {
-                    window.sel = document.querySelectorAll(window.selector);
-                } else if(window.selector.search(/^[a-z]/) === 0) {
-                    window.sel = document.getElementsByTagName(window.selector);
+            if(this.selector) {
+                if(this.selector.indexOf("#") === 0) {
+                    this.sel = document.getElementById(this.selector.replace("#", ""));
+                } else if(this.selector.indexOf("\.") === 0) {
+                    this.sel = document.getElementsByClassName(this.selector.replace("\.", ""));
+                } else if(this.selector.indexOf("\[") === 0) {
+                    this.sel = document.querySelectorAll(this.selector);
+                } else if(this.selector.search(/^[a-z]/) === 0) {
+                    this.sel = document.getElementsByTagName(this.selector);
                 } else {
-                    throw err = "Invalid selector ("+selector+"), use id, class or label";
+                    throw err = "Invalid selector ("+this.selector+"), use id, class or label";
                 }
             } else {
-                window.sel = window.selector = undefined;
+                this.sel = this.selector = undefined;
             }
         } catch(err) {
             console.error(err);
         } finally {
             try {
-                (window.selector && !window.sel) ?
+                (this.selector && !this.sel) ?
                     except("jsHunt is not done, check your selector call's !") : "";
             } catch(e) {
                 console.error(e);
                 return;
             }
         }
-        return this;
-    })();
 
-    // for test your application, see: http://joticode.com/jsboost/docs/test
-    _test_ = function() {
-        let _sel = sel;
-        let keys = Object.keys(_sel);
-        (keys.length > 0) ? 
-            keys.forEach(function(index) {
-                console.log("test_1", typeof _sel, _sel.length, _sel[index]);
-            }) : (_sel) ?
-                console.log("test_2", typeof _sel, _sel.length, _sel) :
-                console.error("test", typeof _sel, _sel.length, _sel);
-        return this;
-    };
-
-    exception = function(msg){
-        throw err = msg;
-        return err;
     }
 
-    getData = function(a, e) {
-        switch(a) {
-            case "undefined":
-                return e;
-            break;
-            case "text":
-                return e.text;
-            break;
-            case "textContent":
-                return e.textContent;
-            break;
-            case "value":
-                return e.value;
-            break;
-            default:
-                throw err = "Invalid argument [" + a + "] for getData !";
-        }
-    }
+    var fadeCtrl  = null; //FadeIn FadeOut Effects Controls
+    var userAgent = navigator.userAgent.toLowerCase();
+    var nodes     = [];
+    var node      = "";
 
-    on = function(ev, callback) {
-        let _sel = sel;
-        let keys = Object.keys(_sel);
-        try {
-            switch(ev) {
-                case "click":
+    jsHunt.fn = jsHunt.prototype = {
+
+        // for test your application, see: http://joticode.com/jshunt/docs/test
+        _test_: function() {
+            let _sel = this.sel || nodes;
+            let keys = Object.keys(_sel);
+            (keys.length > 0) ? 
+                keys.forEach(function(index) {
+                    console.log("test_1", typeof _sel, _sel.length, _sel[index]);
+                }) : (_sel) ?
+                    console.log("test_2", typeof _sel, _sel.length, _sel) :
+                    console.error("test", typeof _sel, _sel.length, _sel);
+            return this;
+        },
+
+        exception: function(msg){
+            throw err = msg;
+            return err;
+        },
+
+        hunter: function(wanted, nodeType) {
+            try {
+                let hunt = document.querySelectorAll(wanted);
+                let keys = Object.keys(hunt);
+                nodes    = [];
+                node     = "";
                 (keys.length > 0) ? 
                     keys.forEach(function(index) {
-                        _sel[index].addEventListener("click", function(e){
-                            e.preventDefault();
-                            console.log("on.click-1", this.text);
-                            callback((args === undefined) ? null : getData(args.rsp, _sel[index]));
-                            //console.log("on.click-1", _sel[index], this.text.trim(), keys, index);
-                        });
-                    }) : (_sel) ?
-                        _sel.addEventListener("click", function(e){
-                            e.preventDefault();
-                            console.log("on.click-2", this.text, this.textContent);
-                            callback((args === undefined) ? null : getData(args.rsp, _sel));
-                            //console.log("on.click-2", _sel, (this.text) ? this.text.trim() : null);
-                        }) : console.error("on.click", typeof _sel, _sel.length, _sel);
-                break;
+                        (nodeType && nodeType === "parent") ? 
+                            nodes.push(hunt[index].parentElement) : 
+                            nodes.push(hunt[index]);
+                    }) : (hunt) ? 
+                            (nodeType && nodeType === "parent") ? 
+                                node = hunt.parentElement : 
+                                hunt : 
+                        jsHunt.fn.exception("hunter error, not found: " + wanted);
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
 
-                case "change": //TODO: new events
+        getData: function(a, e) {
+            switch(a) {
+                case "undefined":
+                    return e;
                 break;
-
+                case "text":
+                    return e.text;
+                break;
+                case "textContent":
+                    return e.textContent;
+                break;
+                case "value":
+                    return e.value;
+                break;
+                case "src":
+                    return e.src;
+                break;
+                case "attr":
+                    return e.attributes;
+                break;
                 default:
-                    throw err = "Event [" + ev + "] not found for on event!";
-
+                    throw err = "Invalid argument [" + a + "] on getData !";
             }
+        },
 
-        } catch(err) {
-            console.error(err);
-        }
-        return this;
-    };
+        on: function(ev, callback) {
+            let _sel = this.sel;
+            let args = this.args;
+            let keys = Object.keys(_sel);
+            try {
+                switch(ev) {
+                    case "click":
+                    (keys.length > 0) ? 
+                        keys.forEach(function(index) {
+                            _sel[index].addEventListener("click", function(e){
+                                e.preventDefault();
+                                callback((args === undefined) ? null : jsHunt.fn.getData(args.rsp, _sel[index]));
+                            });
+                        }) : (_sel) ? 
+                            _sel.addEventListener("click", function(e){
+                                e.preventDefault();
+                                callback((args === undefined) ? null : jsHunt.fn.getData(args.rsp, _sel));
+                            }) : console.error("on.click", typeof _sel, _sel.length, _sel);
+                    break;
 
-    text = function(i) {
-        return (i) ? this.sel[i].text : this.sel.text;
-    }
+                    case "change": //TODO: new events
+                    break;
 
-    click = function(callback) {
-        let _sel = sel;
-        let keys = Object.keys(_sel);
-        (keys.length > 0) ? 
-            keys.forEach(function(index) {
-                _sel[index].addEventListener("click", function(e){
-                    e.preventDefault();
-                    callback(this.text);
-                    console.log("click-1", _sel[index], this.text.trim(), keys, index);
-                });
-            }) : (_sel) ?
-                _sel.addEventListener("click", function(e){
-                    e.preventDefault();
-                    callback(this.text || null);
-                    console.log("click-2", _sel, (this.text) ? this.text.trim() : null);
-                }) : console.error("on.click", typeof _sel, _sel.length, _sel);
-        return this;
-    }
-
-    nodeParent = function(parentItem, item) {
-        let _sel = sel[item];
-        (_sel.parentElement.className === parentItem.replace("\.", "")) ?
-            window.c = _sel.parentElement :
-            "";
-        return this;
-    };
-
-    addClass = function(val) {
-        (window.c) ? window.c.attributes.class.value += " " + val : "";
-        return this;
-    };
-
-    removeClass = function(classname) {
-        let _sel = sel;
-        let keys = Object.keys(_sel);
-        try {
-            (keys.length > 0) ?
-                keys.forEach(function(i){
-                    (typeof _sel[i] !== "undefined") ? _sel[i].classList.remove(classname) : undefined;
-                }) : exception("Selector ("+window.selector+") not found");
-        } catch(err) {
-            console.error(err);
-        }
-        return this;
-    };
-
-    attr = function(type, value) {
-        //TODO: Criar opcoes de atributos alem do src
-        try {
-            let _sel = sel;
-            (_sel && _sel === "object" || Array.isArray(_sel)) ? 
-                _sel.forEach(function(a, index, el) {
-                    _sel[index].attributes.src.value = value;
-                }) : (_sel) ?
-                    _sel.attributes.src.value = value : err = "attr() error " + type;
-        } catch(err) {
-            console.error(err);
-        }
-        return this;
-    };
-
-    html = function(text) {
-        try {
-            let _sel = sel;
-            (_sel && _sel === "object" || Array.isArray(_sel)) ? 
-                _sel.forEach(function(a, index, el) {
-                    _sel[index].innerHTML = text;
-                }) : (_sel) ?
-                    _sel.innerHTML = text : err = "html() error " + type;
-        } catch(err) {
-            console.error(err);
-        }
-        return this;
-    };
-
-    append = function(text) {
-        try {
-            let _sel = sel;
-            (_sel && _sel === "object" || Array.isArray(_sel)) ? 
-                _sel.forEach(function(a, index, el) {
-                    _sel[index].innerHTML += text;
-                }) : (_sel) ?
-                    _sel.innerHTML += text : err = "append() error " + type;
-        } catch(err) {
-            console.error(err);
-        }
-        return this;
-    };
-
-    display = function(value) {
-        try {
-            let _sel = sel;
-            (_sel && _sel === "object" || Array.isArray(_sel)) ? 
-                _sel.forEach(function(a, index, el) {
-                    _sel[index].style.display = value;
-                }) : (_sel) ?
-                    _sel.style.display = value : err = "display() error " + type;
-        } catch(err) {
-            console.error(err);
-        }
-        return this;
-    };
-    
-    /* FadeIn FadeOut Effects Controls */
-    var fadeCtrl = null;
-
-    fadeIn = function(p) {
-        clearInterval(fadeCtrl);
-        var _opacity  = 0; //0....100
-        //copy current target tag (noConflict)
-        let _element  = sel;
-        let _selector = selector;
-        
-        // CSS Reset Element
-        _element.style.display = "block";
-        
-        //Cross Browser CSS > IE
-        if( userAgent.indexOf( 'msie' ) != -1 ) {
-            _element.style.filter  = "alpha(opacity=0)";
-        } else { _element.style.opacity = 0; }
-
-        fadeCtrl = setInterval(function(){
-            if((_opacity >= 100)) {
-                clearInterval(fadeCtrl);
-
-                // Element Automatic Close
-                if(typeof p !== "undefined" && parseInt(p.timeout) > 0) {
-
-                    setTimeout(function(){
-                        jsHunt(_selector).fadeOut();
-                    }, parseInt(p.timeout));
+                    default:
+                        throw err = "Event [" + ev + "] not found for on event!";
 
                 }
 
-            } else {
-                _opacity += 2;
-                
-                //Cross Browser CSS > IE
-                if( userAgent.indexOf( 'msie' ) != -1 ) {
-                    _element.style.filter  = "alpha(opacity=" + _opacity + ")";
-                } else { _element.style.opacity = _opacity / 100; }
+            } catch(err) {
+                console.error(err);
             }
+            return this;
+        },
 
-        }, (p === undefined) ? 1 : p.timefade);
-
-        return this;
-    }
-
-    fadeOut = function(p) {
-        clearInterval(fadeCtrl);
-        var _opacity  = 100; //100....0
-        //copy current target tag (noConflict)
-        let _element  = sel;
-        let _selector = selector;
-        
-        fadeCtrl = setInterval(function(){
-            if((_opacity <= 0)) {
-                clearInterval(fadeCtrl);
-                _element.style.display = "none";
-            } else {
-                _opacity -= 2;
-                
-                //Cross Browser CSS > IE
-                if( userAgent.indexOf( 'msie' ) != -1 ) {
-                    _element.style.filter = "alpha(opacity=" + _opacity + ")";
-                } else { _element.style.opacity = _opacity / 100; }
+        nodeParent: function(parentItem) {
+            try {
+                jsHunt().hunter(parentItem + " " + this.selector, "parent");
+                (nodes.length <= 0) ? 
+                jsHunt.fn.exception("nodeParent error, not found [" + parentItem + " " + this.selector + "] !") : null;
+            } catch(err) {
+                console.error(err);
             }
-            
-        }, (p === undefined) ? 1 : p.timefade);
+            return this;
+        },
 
-        return this;
-    }
-
-	modal = function(params) {
-        try {
-            if(params === undefined) {
-                throw err = "Modal params missing !";
+        nodeChild: function(childItem) {
+            try {
+                jsHunt().hunter(this.selector + " " + childItem);
+                (nodes.length <= 0) ? 
+                jsHunt.fn.exception("nodeChild error, not found [" + this.selector + " " + childItem + "] !") : null;
+            } catch(err) {
+                console.error(err);
             }
-            let ac = params.action;
-            let bg = params.bgscreen;
-            let bx = params.boxmodel;
-            let ef = params.effect;
+            return this;
+        },
+
+        resetStyle: function(index) {
+            try {
+                (index && index >= 0) ?
+                    nodes[index].className = "" : 
+                (nodes.length > 0 && !index) ? 
+                    nodes.forEach(function(inode) {
+                        inode.className = "";
+                    }) : (node) ?
+                        node.className = "" : jsHunt.fn.exception("resetStyle error, nodes is undefined !");
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
+
+        addClass: function(classname, index) {
+            try {
+                (index && index > 0) ? 
+                    (nodes[index].className.search(classname) >= 0 || 
+                     nodes[index].className.search(" " + classname) >= 0) ? "" : 
+                        nodes[index].className += classname . trim() 
+                        :
+                (nodes.length > 0) ? 
+                    nodes.forEach(function(inode) {
+                        (
+                            inode.className.search(classname) >= 0 || 
+                            inode.className.search(" " + classname) >= 0
+                        ) ? "" : 
+                            inode.className += " " + classname . trim();
+                    }) : (node) ?
+                        (
+                            node.className.search(classname) >= 0 ||
+                            node.className.search(" " + classname) >= 0
+                        ) ? "" : node.className += " " + classname . trim()
+                         : jsHunt.fn.exception("addClass error, nodes is undefined !");
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
+
+        removeClass: function(classname) {
+            let _sel = this.sel;
+            let keys = Object.keys(_sel);
+            try {
+                (keys.length > 0) ?
+                    keys.forEach(function(i){
+                        (typeof _sel[i] !== "undefined") ? _sel[i].classList.remove(classname) : undefined;
+                    }) : jsHunt.fn.exception("Selector ("+this.selector+") not found");
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
+
+        attr: function(type, value) {
+            //TODO: Criar opcoes de atributos alem do src
+            try {
+                let _sel = this.sel;
+                (_sel && _sel === "object" || Array.isArray(_sel)) ? 
+                    _sel.forEach(function(a, index, el) {
+                        _sel[index].attributes.src.value = value;
+                    }) : (_sel) ?
+                        _sel.attributes.src.value = value : err = "attr() error " + type;
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
+
+        html: function(text) {
+            try {
+                let _sel = this.sel;
+                (_sel && _sel === "object" || Array.isArray(_sel)) ? 
+                    _sel.forEach(function(a, index, el) {
+                        _sel[index].innerHTML = text;
+                    }) : (_sel) ?
+                        _sel.innerHTML = text : err = "html() error " + type;
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
+
+        append: function(text) {
+            try {
+                let _sel = this.sel;
+                (_sel && _sel === "object" || Array.isArray(_sel)) ? 
+                    _sel.forEach(function(a, index, el) {
+                        _sel[index].innerHTML += text;
+                    }) : (_sel) ?
+                        _sel.innerHTML += text : err = "append() error " + type;
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
+
+        display: function(value) {
+            try {
+                let _sel = this.sel;
+                (_sel && _sel === "object" || Array.isArray(_sel)) ? 
+                    _sel.forEach(function(a, index, el) {
+                        _sel[index].style.display = value;
+                    }) : (_sel) ?
+                        _sel.style.display = value : err = "display() error " + type;
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
+
+        text: function(i) {
+
+            return (i) ? this.sel[i].text : this.sel.text;
+
+        },
+
+        click: function(callback) {
+            let _sel = this.sel;
+            let keys = Object.keys(_sel);
+            (keys.length > 0) ? 
+                keys.forEach(function(index) {
+                    _sel[index].addEventListener("click", function(e){
+                        e.preventDefault();
+                        callback(this.text);
+                        console.log("click-1", _sel[index], this.text.trim(), keys, index);
+                    });
+                }) : (_sel) ?
+                    _sel.addEventListener("click", function(e){
+                        e.preventDefault();
+                        callback(this.text || null);
+                        console.log("click-2", _sel, (this.text) ? this.text.trim() : null);
+                    }) : console.error("on.click", typeof _sel, _sel.length, _sel);
+            return this;
+        },
+
+        fadeIn: function(p) {
+            clearInterval(this.fadeCtrl);
+            var _opacity  = 0; //0....100
             //copy current target tag (noConflict)
-            let _selector = selector;
+            let _element  = this.sel;
+            let _selector = this.selector;
+            
+            // CSS Reset Element
+            _element.style.display = "block";
+            
+            //Cross Browser CSS > IE
+            if( userAgent.indexOf( 'msie' ) != -1 ) {
+                _element.style.filter  = "alpha(opacity=0)";
+            } else { _element.style.opacity = 0; }
 
-            if(ac === "open") {
-                jsHunt(bg).display("block");
-                switch(ef) {
-                    case "fade":
-                        jsHunt(_selector).fadeIn();
-                    break;
-                    case "display":
-                        jsHunt(_selector).display("block");
-                    break;
-                    default:
-                        throw err = "Modal effect params wrong !";
+            this.fadeCtrl = setInterval(function(){
+                if((_opacity >= 100)) {
+                    clearInterval(this.fadeCtrl);
+
+                    // Element Automatic Close
+                    if(typeof p !== "undefined" && parseInt(p.timeout) > 0) {
+
+                        setTimeout(function(){
+                            jsHunt(_selector).fadeOut();
+                        }, parseInt(p.timeout));
+
+                    }
+
+                } else {
+                    _opacity += 2;
+                    
+                    //Cross Browser CSS > IE
+                    if( userAgent.indexOf( 'msie' ) != -1 ) {
+                        _element.style.filter  = "alpha(opacity=" + _opacity + ")";
+                    } else { _element.style.opacity = _opacity / 100; }
                 }
+
+            }, (p === undefined) ? 1 : p.timefade);
+
+            return this;
+        },
+
+        fadeOut: function(p) {
+            clearInterval(this.fadeCtrl);
+            var _opacity  = 100; //100....0
+            //copy current target tag (noConflict)
+            let _element  = this.sel;
+            let _selector = this.selector;
+            
+            this.fadeCtrl = setInterval(function(){
+                if((_opacity <= 0)) {
+                    clearInterval(this.fadeCtrl);
+                    _element.style.display = "none";
+                } else {
+                    _opacity -= 2;
+                    
+                    //Cross Browser CSS > IE
+                    if( userAgent.indexOf( 'msie' ) != -1 ) {
+                        _element.style.filter = "alpha(opacity=" + _opacity + ")";
+                    } else { _element.style.opacity = _opacity / 100; }
+                }
+                
+            }, (p === undefined) ? 1 : p.timefade);
+
+            return this;
+        },
+
+        modal: function(params) {
+            try {
+                if(params === undefined) {
+                    throw err = "Modal params missing !";
+                }
+                let ac = params.action;
+                let bg = params.bgscreen;
+                let bx = params.boxmodel;
+                let ef = params.effect;
+                //copy current target tag (noConflict)
+                let _selector = this.selector;
+
+                if(ac === "open") {
+                    jsHunt(bg).display("block");
+                    switch(ef) {
+                        case "fade":
+                            jsHunt(_selector).fadeIn();
+                        break;
+                        case "display":
+                            jsHunt(_selector).display("block");
+                        break;
+                        default:
+                            throw err = "Modal effect params wrong !";
+                    }
+                }
+
+                if(ac === "close") {
+                    setTimeout(function(){
+                        jsHunt(bg).display("none");
+                    }, 400);
+                    switch(ef) {
+                        case "fade":
+                            jsHunt(_selector).fadeOut();
+                        break;
+                        case "display":
+                            jsHunt(_selector).display("none");
+                        break;
+                        default:
+                            throw err = "Modal effect params wrong !";
+                    }
+                }
+
+            } catch(err) {
+                console.error(err);
             }
 
-            if(ac === "close") {
-                setTimeout(function(){
-                    jsHunt(bg).display("none");
-                }, 400);
-                switch(ef) {
-                    case "fade":
-                        jsHunt(_selector).fadeOut();
-                    break;
-                    case "display":
-                        jsHunt(_selector).display("none");
-                    break;
-                    default:
-                        throw err = "Modal effect params wrong !";
-                }
+            return this;
+        },
+
+        loaded: function(callback) {
+            window.onload = function() {
+                callback();
             }
-
-        } catch(err) {
-            console.error(err);
         }
 
-        return this;
-	}
+    };
 
-    loaded = function(callback) {
-        window.onload = function() {
-            callback();
-        }
-    }
+    window.jsHunt = jsHunt, window.jH = jsHunt;
 
-    return this;
-});
+})();
 
 //No Conflict Resolved
 var _jsHunt = window.jsHunt,
