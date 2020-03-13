@@ -27,7 +27,7 @@ function closeModal(context) {
 	//jsHunt("#img_modal").attr("src", "");
 }
 
-jsHunt().loaded(function() {console.log("loaded");
+jsHunt().loaded(function() {
 
 	// Button Open Modal
 	jsHunt("#bt_open_modal").on("click", function(rsp){
@@ -35,7 +35,7 @@ jsHunt().loaded(function() {console.log("loaded");
 		openModal('Modal jsHunt Demo', midia);
 
 		jsHunt(".page-item").removeClass("active");
-		jsHunt(".page-link").nodeParent(".page-item", 1).addClass("active");
+		jsHunt(".page-link").nodeParent(".page-item").addClass("active", 1);
 	});
 
 	// First Item
@@ -44,7 +44,7 @@ jsHunt().loaded(function() {console.log("loaded");
 		jsHunt("#img_modal").attr("src", midia).fadeIn();
 		
 		jsHunt('.page-item').removeClass('active');
-		jsHunt(".page-link").nodeParent(".page-item", 1).addClass("active");
+		jsHunt(".page-link").nodeParent(".page-item").addClass("active", 1);
 	});
 
 	// Current Item
@@ -53,13 +53,16 @@ jsHunt().loaded(function() {console.log("loaded");
 		jsHunt("#img_modal").attr("src", midia).fadeIn();
 		
 		jsHunt(".page-item").removeClass("active");
-		jsHunt(".page-link").nodeParent(".page-item", index).addClass("active");
+		jsHunt(".page-link").nodeParent(".page-item").addClass("active", index);
 	});
 
 	// Last Item
 	jsHunt("#a_last_item_modal").on("click", function(rsp){
 		var midia = "resources/img/image7.jpg";
 		jsHunt("#img_modal").attr("src", midia).fadeIn();
+		
+		jsHunt('.page-item').removeClass('active');
+		jsHunt(".page-link").nodeParent(".page-item").addClass("active", 7);
 	});
 
 	// Button Close Modal [X]

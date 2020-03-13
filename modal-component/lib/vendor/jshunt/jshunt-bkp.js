@@ -183,7 +183,7 @@ const jsHunt = (function(selector, args) {
             (index && index > 0) ? 
                 (window.nodes[index].className.search(classname) >= 0 || 
                  window.nodes[index].className.search(" " + classname) >= 0) ? "" : 
-                    window.nodes[index].className += classname . trim() 
+                    window.nodes[index].className += " " + classname
                     :
             (window.nodes.length > 0) ? 
                 window.nodes.forEach(function(inode) {
@@ -191,12 +191,12 @@ const jsHunt = (function(selector, args) {
                         inode.className.search(classname) >= 0 || 
                         inode.className.search(" " + classname) >= 0
                     ) ? "" : 
-                        inode.className += " " + classname . trim();
+                        inode.className += " " + classname
                 }) : (window.node) ?
                     (
                         node.className.search(classname) >= 0 ||
                         node.className.search(" " + classname) >= 0
-                    ) ? "" : node.className += " " + classname . trim()
+                    ) ? "" : node.className += " " + classname
                      : exception("addClass error, nodes is undefined !");
         } catch(err) {
             console.error(err);

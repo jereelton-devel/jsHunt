@@ -1,4 +1,3 @@
-
 /*
 * jsHunt Javascript Library - 2020 (by JOTICODE)
 */
@@ -49,11 +48,11 @@
 
     }
 
-    var fadeCtrl  = null; //FadeIn FadeOut Effects Controls
     var userAgent = navigator.userAgent.toLowerCase();
     var nodes     = [];
     var node      = "";
-
+    var fadeCtrl  = null; //FadeIn FadeOut Effects Controls
+    
     jsHunt.fn = jsHunt.prototype = {
 
         // for test your application, see: http://joticode.com/jshunt/docs/test
@@ -126,28 +125,17 @@
             let args = this.args;
             let keys = Object.keys(_sel);
             try {
-                switch(ev) {
-                    case "click":
-                    (keys.length > 0) ? 
-                        keys.forEach(function(index) {
-                            _sel[index].addEventListener("click", function(e){
-                                e.preventDefault();
-                                callback((args === undefined) ? null : jsHunt.fn.getData(args.rsp, _sel[index]));
-                            });
-                        }) : (_sel) ? 
-                            _sel.addEventListener("click", function(e){
-                                e.preventDefault();
-                                callback((args === undefined) ? null : jsHunt.fn.getData(args.rsp, _sel));
-                            }) : console.error("on.click", typeof _sel, _sel.length, _sel);
-                    break;
-
-                    case "change": //TODO: new events
-                    break;
-
-                    default:
-                        throw err = "Event [" + ev + "] not found for on event!";
-
-                }
+                (keys.length > 0) ? 
+                    keys.forEach(function(index) {
+                        _sel[index].addEventListener(ev, function(e){
+                            e.preventDefault();
+                            callback((args === undefined) ? null : jsHunt.fn.getData(args.rsp, _sel[index]));
+                        });
+                    }) : (_sel) ? 
+                        _sel.addEventListener("click", function(e){
+                            e.preventDefault();
+                            callback((args === undefined) ? null : jsHunt.fn.getData(args.rsp, _sel));
+                        }) : jsHunt.fn.exception("on."+ev+" "+typeof _sel+" "+ _sel.length+" "+_sel);
 
             } catch(err) {
                 console.error(err);
@@ -194,10 +182,10 @@
 
         addClass: function(classname, index) {
             try {
-                (index && index > 0) ? 
+                (index && index >= 0) ? 
                     (nodes[index].className.search(classname) >= 0 || 
                      nodes[index].className.search(" " + classname) >= 0) ? "" : 
-                        nodes[index].className += classname . trim() 
+                        nodes[index].className += " " + classname
                         :
                 (nodes.length > 0) ? 
                     nodes.forEach(function(inode) {
@@ -205,12 +193,12 @@
                             inode.className.search(classname) >= 0 || 
                             inode.className.search(" " + classname) >= 0
                         ) ? "" : 
-                            inode.className += " " + classname . trim();
+                            inode.className += " " + classname
                     }) : (node) ?
                         (
                             node.className.search(classname) >= 0 ||
                             node.className.search(" " + classname) >= 0
-                        ) ? "" : node.className += " " + classname . trim()
+                        ) ? "" : node.className += " " + classname
                          : jsHunt.fn.exception("addClass error, nodes is undefined !");
             } catch(err) {
                 console.error(err);
