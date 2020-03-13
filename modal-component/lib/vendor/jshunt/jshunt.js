@@ -116,6 +116,20 @@
             }
         },
 
+        isOn: function(params, index) {
+            let _sel  = this.sel;
+            let state = "";
+            try {
+            (params.type === "classname") ?
+                (_sel[index].className.search(params.value) >= 0) ?
+                    state=true : state=false :
+                    jsHunt.fn.exception("isOn: invalid params -> " + params.type);
+            } catch(err) {
+                console.error(err);
+            }
+            return state;
+        },
+
         on: function(ev, callback) {
             let _sel = this.sel;
             let args = this.args;
@@ -299,7 +313,7 @@
         },
 
         fadeIn: function(p) {
-            clearInterval(this.fadeCtrl);
+            clearInterval(fadeCtrl);
             var _opacity  = 0; //0....100
             //copy current target tag (noConflict)
             let _element  = this.sel;
@@ -313,9 +327,9 @@
                 _element.style.filter  = "alpha(opacity=0)";
             } else { _element.style.opacity = 0; }
 
-            this.fadeCtrl = setInterval(function(){
+            fadeCtrl = setInterval(function(){
                 if((_opacity >= 100)) {
-                    clearInterval(this.fadeCtrl);
+                    clearInterval(fadeCtrl);
 
                     // Element Automatic Close
                     if(typeof p !== "undefined" && parseInt(p.timeout) > 0) {
@@ -341,15 +355,15 @@
         },
 
         fadeOut: function(p) {
-            clearInterval(this.fadeCtrl);
+            clearInterval(fadeCtrl);
             var _opacity  = 100; //100....0
             //copy current target tag (noConflict)
             let _element  = this.sel;
             let _selector = this.selector;
             
-            this.fadeCtrl = setInterval(function(){
+            fadeCtrl = setInterval(function(){
                 if((_opacity <= 0)) {
-                    clearInterval(this.fadeCtrl);
+                    clearInterval(fadeCtrl);
                     _element.style.display = "none";
                 } else {
                     _opacity -= 2;

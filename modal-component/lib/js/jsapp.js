@@ -40,29 +40,35 @@ jsHunt().loaded(function() {
 
 	// First Item
 	jsHunt("#a_previous_item_modal").on("click", function(rsp){
-		var midia = "resources/img/image1.jpg";
-		jsHunt("#img_modal").attr("src", midia).fadeIn();
-		
-		jsHunt('.page-item').removeClass('active');
-		jsHunt(".page-link").nodeParent(".page-item").addClass("active", 1);
+		if(!jsHunt(".page-item").isOn({type: "classname", value: "active"}, 1)) {
+			var midia = "resources/img/image1.jpg";
+			jsHunt("#img_modal").attr("src", midia).fadeIn();
+			
+			jsHunt('.page-item').removeClass('active');
+			jsHunt(".page-link").nodeParent(".page-item").addClass("active", 1);
+		}
 	});
 
 	// Current Item
 	jsHunt("[a-item-modal]", {rsp: "text"}).on("click", function(index){
-		var midia = "resources/img/image"+index+".jpg";
-		jsHunt("#img_modal").attr("src", midia).fadeIn();
-		
-		jsHunt(".page-item").removeClass("active");
-		jsHunt(".page-link").nodeParent(".page-item").addClass("active", index);
+		if(!jsHunt(".page-item").isOn({type: "classname", value: "active"}, index)) {
+			var midia = "resources/img/image"+index+".jpg";
+			jsHunt("#img_modal").attr("src", midia).fadeIn();
+			
+			jsHunt(".page-item").removeClass("active");
+			jsHunt(".page-link").nodeParent(".page-item").addClass("active", index);
+		}
 	});
 
 	// Last Item
 	jsHunt("#a_last_item_modal").on("click", function(rsp){
-		var midia = "resources/img/image7.jpg";
-		jsHunt("#img_modal").attr("src", midia).fadeIn();
-		
-		jsHunt('.page-item').removeClass('active');
-		jsHunt(".page-link").nodeParent(".page-item").addClass("active", 7);
+		if(!jsHunt(".page-item").isOn({type: "classname", value: "active"}, 7)) {
+			var midia = "resources/img/image7.jpg";
+			jsHunt("#img_modal").attr("src", midia).fadeIn();
+			
+			jsHunt('.page-item').removeClass('active');
+			jsHunt(".page-link").nodeParent(".page-item").addClass("active", 7);
+		}
 	});
 
 	// Button Close Modal [X]
