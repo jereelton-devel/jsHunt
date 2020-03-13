@@ -10,36 +10,32 @@
             return new jsHunt(_selector, _args);
         }
 
-        this.selector  = _selector;
-        this.args      = _args;
-
-        except = function(msg) {
-            throw err = msg;
-            return err;
-        };
-
         try {
-            if(this.selector) {
-                if(this.selector.indexOf("#") === 0) {
-                    this.sel = document.getElementById(this.selector.replace("#", ""));
-                } else if(this.selector.indexOf("\.") === 0) {
-                    this.sel = document.getElementsByClassName(this.selector.replace("\.", ""));
-                } else if(this.selector.indexOf("\[") === 0) {
-                    this.sel = document.querySelectorAll(this.selector);
-                } else if(this.selector.search(/^[a-z]/) === 0) {
-                    this.sel = document.getElementsByTagName(this.selector);
+            if(_selector) {
+                if(_selector.indexOf("#") === 0) {
+                    this.sel = document.getElementById(_selector.replace("#", ""));
+                } else if(_selector.indexOf("\.") === 0) {
+                    this.sel = document.getElementsByClassName(_selector.replace("\.", ""));
+                } else if(_selector.indexOf("\[") === 0) {
+                    this.sel = document.querySelectorAll(_selector);
+                } else if(_selector.search(/^[a-z]/) === 0) {
+                    this.sel = document.getElementsByTagName(_selector);
                 } else {
-                    throw err = "Invalid selector ("+this.selector+"), use id, class or label";
+                    throw err = "Invalid selector ("+_selector+"), use id, class or label";
                 }
             } else {
-                this.sel = this.selector = undefined;
+                this.sel = this.selector = _selector = undefined;
             }
         } catch(err) {
             console.error(err);
         } finally {
             try {
-                (this.selector && !this.sel) ?
-                    except("jsHunt is not done, check your selector call's !") : "";
+                if(_selector && !this.sel) {
+                    throw err = "jsHunt is not done, check your selector call's !";
+                } else {
+                    this.selector = _selector;
+                    this.args     = _args;
+                }
             } catch(e) {
                 console.error(e);
                 return;
@@ -52,7 +48,7 @@
     var nodes     = [];
     var node      = "";
     var fadeCtrl  = null; //FadeIn FadeOut Effects Controls
-    
+
     jsHunt.fn = jsHunt.prototype = {
 
         // for test your application, see: http://joticode.com/jshunt/docs/test
