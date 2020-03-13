@@ -99,7 +99,4 @@
 .blue-color {
 	color: #0000FF;
 }
-li.active, .active, .active>a, .active a {
-	background-color: #0000FF;
-	color: #FFFFFF;
-}
+
