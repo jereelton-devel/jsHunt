@@ -130,20 +130,37 @@ jsHunt(".page-link").nodeParent(".page-item").addClass("active", 1);
 	
 	
 ------------------------------------------------------------------------
-!Adicionar/Remover uma classe a um elemento ou mais filho(s) de uma elemento raiz
-add -> jsHunt("p").addClass("red-color");
-del -> jsHunt("p").removeClass("red-color");
+!Adicionar/Remover/Resetar uma classe a um elemento ou mais, filho(s) de um elemento raiz
 
-add -> jsHunt("#div_tests").nodeChild("p").addClass("red-color");
-del -> jsHunt("#div_tests").nodeChild("p").removeClass("red-color");
+[Adicionar]
+jsHunt("p").addClass("red-color");
+jsHunt("p").addClass("red-color", 1);
+jsHunt("#div_tests").nodeChild("p").addClass("red-color");
+jsHunt("#div_tests").nodeChild("p").addClass("red-color", 1);
+jsHunt().hunter("p").addClass("red-color");
+jsHunt().hunter("p").addClass("red-color", 1);
+jH.fn.hunter("p").addClass("red-color");
+jH.fn.hunter("p").addClass("red-color", 1);
 
-add -> jsHunt().hunter("p").addClass("red-color");
-del -> jsHunt().hunter("p").removeClass("red-color");
+[Remover]
+jsHunt("p").removeClass("red-color");
+jsHunt("p").removeClass("red-color", 1);
+jsHunt("#div_tests").nodeChild("p").removeClass("red-color");
+jsHunt("#div_tests").nodeChild("p").removeClass("red-color", 1);
+jsHunt().hunter("p").removeClass("red-color");
+jsHunt().hunter("p").removeClass("red-color", 1);
+jH.fn.hunter("p").removeClass("red-color");
+jH.fn.hunter("p").removeClass("red-color", 1);
 
-add -> jH.fn.hunter("p").addClass("red-color");
-del -> jH.fn.hunter("p").removeClass("red-color");
-
-
+[Resetar]
+jsHunt("p").resetStyle();
+jsHunt("p").resetStyle(1);
+jsHunt("#div_tests").nodeChild("p").resetStyle();
+jsHunt("#div_tests").nodeChild("p").resetStyle(1);
+jsHunt().hunter("p").resetStyle();
+jsHunt().hunter("p").resetStyle(1);
+jH.fn.hunter("p").resetStyle();
+jH.fn.hunter("p").resetStyle(1);
 
 
 
