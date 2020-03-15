@@ -17,6 +17,9 @@
 	width: 40%;
 	text-align: center;
 }
+#div_tests {
+	border: solid black 1px;
+}
 .btn-open {
 	width: 200px;
 	min-height: 130px;

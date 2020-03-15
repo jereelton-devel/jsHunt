@@ -24,3 +24,29 @@
 
 })();
 
+console.log("global", this);
+
+(function() {
+    console.log("function", this);
+})();
+
+function teste() {
+    var t = null;
+    console.log("teste", this);
+}
+
+teste();
+
+var f = {
+    firstname: "Marcelo",
+    lastname: "Oliveira",
+
+    func: function() {
+        console.log("func", this);
+        console.log("func", this.firstname);
+    }
+}
+
+document.getElementById("bt_open_modal").onclick = function(e) {e.preventDefault(); teste();}
+
+f.func();

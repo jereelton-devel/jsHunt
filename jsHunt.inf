@@ -5,7 +5,9 @@ O jsHunt é uma biblioteca javascript criada para otimizar o tempo de desenvolvim
 
 [Como usar]
 
+.loaded()
 # Carregando o jsHunt
+
 Para verificar ou executar se o jsHunt esta carregado corretamente use a seguinte instrução:
 
 	jsHunt().loaded(callback function);
@@ -17,17 +19,19 @@ Exemplo:
 	
 [Registrar Eventos]
 
-# Mouse
-Para adicionar um evento de click ou change em um elemento, basta registra-lo no DOM com a seguinte instrução:
+.on()
+# Eventos de Mouse
+
+Para adicionar um evento de click, change ou qualquer outro em um elemento html, basta registra-lo no DOM com a seguinte instrução:
 	
-	jsHunt("element").on("event", callback function(response));
+	jsHunt("element").on(event, callback function(response));
 	
 Exemplo:
 	jsHunt("#bt_open_modal").on("click", function(rsp){
 		/*Your Code Hede*/
 	});
 
-Nesse caso podemos utilizar elementos selecionados pelos seletores css e html5 (data-labels-set), como segue abaixo:
+Nesse caso podemos utilizar elementos selecionados pelos seletores css e html5 (data-label-set), como segue abaixo:
 	> Seletor CSS para classes: .css_class
 	
 		jsHunt(".css_class").on("change", changeBackColor());
@@ -40,7 +44,7 @@ Nesse caso podemos utilizar elementos selecionados pelos seletores css e html5 (
 		
 	Com o uso de id, você pode garantir que apenas um elemento da pagina tera uma função registrada e especifica para ele.
 	
-	> Data Label HTML: [data-label-item]
+	> Data Label HTML5: [data-label-item]
 	
 		jsHunt("[data-label-item]").on("click", function(rsp){
 			/*Your Code Here*/
@@ -48,22 +52,63 @@ Nesse caso podemos utilizar elementos selecionados pelos seletores css e html5 (
 	
 	Com o uso de data-label podemos selecionar todos os elementos de uma lista de itens por exemplo, uma lista de paginação e registrar eventos para cada um dos elementos.
 	
-	> Argumentos aceitos
+	[Argumentos aceitos]
 	
-	O jsHunt aceita um segundo parametro, que deve ser um conjunto de argumentos previamente definidos e aceitos pela biblioteca. Isso é abordado com mais detalhes em [CRIAR REFERENCIA], porém aqui vai uma breve explicação do seu funcionamento.
+	O jsHunt aceita um segundo parametro, que deve ser um conjunto de argumentos previamente definidos e aceitos pela biblioteca. Isso será abordado com mais detalhes em {CRIAR REFERENCIA}, porém aqui vai uma breve explanação do seu funcionamento.
 	
 		jsHunt("#css_id", {btn_rsp: "text"}).on("click", callback function(rsp));
 		
-	Nesse caso voce diz ao jsHunt que o conjunto de parametros como segundo argumento contem o valor do botao que sera clicado, ou seja, element.text, que em outras palavras obtem o texto contido no elemento html. Esse texto é retornado no callback passado como parametro para a função on.click, o qual pode ser capturado no parametro de retorno da função on.click, expresso dentro da declaração function(rsp).
+	Nesse caso voce diz ao jsHunt que o conjunto de parametros como segundo argumento contem o valor do botao que sera clicado, ou seja, element.text, que em outras palavras obtem o texto contido no elemento html. Esse texto é retornado no callback passado como parametro para a função on.click, o qual pode ser capturado no parametro de retorno da função on.click, expresso dentro da declaração de função anonima function(rsp).
 	
 	[IMPORTANTE]
 	!Essa configuração é opcional, e deve ser usada quando a intenção é capturar algum dado do elemento onde o evento esta sendo aplicado.
+
+[Estado de elementos]	
+
+.isOn()
+#Verificar o estado de um elemento
+
+Quando se faz necessário verificar se um elemento esta ativo, é preciso usar a função isOn, que retorna um boolean referente ao estado do elemento. Para usar esta função basta fazer a chamada da função passando o elemento, o tipo de elemento e o valor a ser considerado:
+
+	jsHunt(".page-item").isOn(params, index);
+
+Resta dizer que ambos parametros (params e index) são obrigatórios e devem ser informados corretamento, por exemplo:
+	
+	! Para veificar uma classe css
+	jsHunt(".page-item").isOn({type: "classname", value: "active"}, 1);
+	
+	Isso requisita ao jsHunt que verifique se o elemento .page-item esta ativo, onde o parametro type diz respeito a classe css, e o parametro value diz respeito ao nome dessa classe.
+	Já o parametro 1 (index), refere-se ao item a ser verificado, que por sua vez depende do tipo de lista de elemento e da quantidade de elementos encontrados pelo jsHunt.
+	
+	! Para verificar um estado de elemento pelo id
+	jsHunt("#bt_open_modal").isOn({type: "id", value: "bt_open_modal"}, 0);
+	
+	Caso seja necessário verificar o id de um elemento para verificar se ele esta ativo em seu estado ou não, porém tenha em mente que se trata de um elemento bem especifico em sua página.
+	
+	! Para verificar um estado de botão
+	jsHunt("#bt_open_modal").isOn({type: "disabled", value: true}, 0);
+	
+	Nesse caso o jsHunt busca o primeiro elemento contido na página, pelo id bt_open_modal e verifica seu estado de acordo com os parametros type e value, que nos caso são disabled e true, propriedades exclusivas de botões e caixas de entrada de texto.
+	
+[Tratamento de estilos visuais css]
+
+.addClass()
+# Para adicionar uma classe a um elemento
+
+.removeClass()
+# Para remover uma classe de elemento
+
+.resetStyles()
+# Para remover todas as classes de um elemento
+
 
 q = document.querySelectorAll("#div_tests");
 q = document.querySelectorAll("#div_tests p");
 q.length
 q.forEach(function(i){console.log(i.children)});
 q.forEach(function(i){ i.className = "red-color" });
+
+jsHunt("#bt_open_modal").on("click", function(rsp){});
 
 jsHunt("body").nodeChild("h3").addClass("blue-color");
 
@@ -84,11 +129,27 @@ jsHunt(".page-link").nodeParent(".page-item").addClass("active");
 jsHunt(".page-link").nodeParent(".page-item").addClass("active", 1);
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
+------------------------------------------------------------------------
+!Adicionar/Remover uma classe a um elemento ou mais filho(s) de uma elemento raiz
+add -> jsHunt("p").addClass("red-color");
+del -> jsHunt("p").removeClass("red-color");
+
+add -> jsHunt("#div_tests").nodeChild("p").addClass("red-color");
+del -> jsHunt("#div_tests").nodeChild("p").removeClass("red-color");
+
+add -> jsHunt().hunter("p").addClass("red-color");
+del -> jsHunt().hunter("p").removeClass("red-color");
+
+add -> jH.fn.hunter("p").addClass("red-color");
+del -> jH.fn.hunter("p").removeClass("red-color");
+
+
+
+
+
+
+
+
+
+
+

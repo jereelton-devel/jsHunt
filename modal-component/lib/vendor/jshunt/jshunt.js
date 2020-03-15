@@ -1,5 +1,7 @@
 /*
 * jsHunt Javascript Library - 2020 (by JOTICODE)
+* JOTICODE is a property of the JEREELTON DE OLIVEIRA TEIXEIRA - ME
+* Use as open source code, but no sell it to anyone
 */
 
 (function(){
@@ -25,6 +27,7 @@
                 }
             } else {
                 this.sel = this.selector = _selector = undefined;
+                //console.log("const jsHunt-1", _selector, this.sel, this.selector);
             }
         } catch(err) {
             console.error(err);
@@ -35,6 +38,7 @@
                 } else {
                     this.selector = _selector;
                     this.args     = _args;
+                    //console.log("const jsHunt-2", _selector, this.sel, this.selector, this.args);
                 }
             } catch(e) {
                 console.error(e);
@@ -117,13 +121,23 @@
         },
 
         isOn: function(params, index) {
-            let _sel  = this.sel;
-            let state = "";
+            let _sel    = this.sel;
+            let keys    = Object.keys(_sel);
+            let state   = "";
+            let element = (keys.length > 0) ? _sel[index] : _sel;
             try {
-            (params.type === "classname") ?
-                (_sel[index].className.search(params.value) >= 0) ?
-                    state=true : state=false :
-                    jsHunt.fn.exception("isOn: invalid params -> " + params.type);
+            (!params || typeof params === undefined) ? 
+                jsHunt.fn.exception("isOn: missing params !") :
+                (params.type === "classname") ?
+                    (element.className.search(params.value) >= 0) ?
+                        state=true : state=false :
+                (params.type === "id") ?
+                    (element.id === params.value) ?
+                        state=true : state=false :
+                (params.type === "disabled") ?
+                    (element.disabled === params.value) ?
+                        state=true : state=false :
+                jsHunt.fn.exception("isOn: invalid params -> " + params.type);
             } catch(err) {
                 console.error(err);
             }
@@ -133,7 +147,7 @@
         on: function(ev, callback) {
             let _sel = this.sel;
             let args = this.args;
-            let keys = Object.keys(_sel);
+            let keys = (_sel) ? Object.keys(_sel) : "";
             try {
                 (keys.length > 0) ? 
                     keys.forEach(function(index) {
@@ -175,55 +189,101 @@
             return this;
         },
 
-        resetStyle: function(index) {
+        findId: function(element, idvalue) {
+            return (
+                element.id.search(classname) >= 0 ||
+                element.id.search(" " + classname) >= 0 ||
+                element.id.search(classname + " ") >= 0
+            ) ? true : false;
+        },
+
+        findClass: function(element, classname) {
+            return (
+                element.className.search(classname) >= 0 ||
+                element.className.search(" " + classname) >= 0 ||
+                element.className.search(classname + " ") >= 0
+            ) ? true : false;
+        },
+
+        addClass: function(classname, index) {
+            let _sel    = this.sel;
+            let keys    = (_sel) ? Object.keys(_sel) : "";
+            let element = (keys.length > 0) ? 
+                                (index) ? _sel[index] : _sel : 
+                            _sel;console.log(_sel, keys, element);
             try {
-                (index && index >= 0) ?
+                (index && index >= 0 && nodes.length > 0) ? 
+                    jsHunt.fn.findClass(nodes[index], classname) ? "" : 
+                        nodes[index].className += " " + classname
+                        :
+                (nodes.length > 0 && !index) ? 
+                    nodes.forEach(function(inode) {
+                        jsHunt.fn.findClass(inode, classname) ? "" : 
+                            inode.className += " " + classname
+                    }) : (node) ?
+                        jsHunt.fn.findClass(node, classname) ? "" : node.className += " " + classname : 
+                            (element.length > 0) ? 
+                                keys.forEach(function(inode) {
+                                    jsHunt.fn.findClass(element[inode], classname) ? "" :
+                                    element[inode].className += " " + classname;
+                                }) : 
+                                element.className = " " + classname ?
+                                undefined :
+                                jsHunt.fn.exception("addClass error, nodes and selector is undefined !");
+            } catch(err) {
+                console.error(err);
+            }
+            return this;
+        },
+
+        resetStyle: function(index) {
+            let _sel    = this.sel;
+            let keys    = (_sel) ? Object.keys(_sel) : "";
+            let element = (keys.length > 0) ? 
+                                (index) ? _sel[index] : _sel : 
+                            _sel;
+            try {
+                (index && index >= 0 && nodes.length > 0) ?
                     nodes[index].className = "" : 
                 (nodes.length > 0 && !index) ? 
                     nodes.forEach(function(inode) {
                         inode.className = "";
                     }) : (node) ?
-                        node.className = "" : jsHunt.fn.exception("resetStyle error, nodes is undefined !");
+                        node.className = "" : 
+                        (element.length > 0) ? 
+                            keys.forEach(function(inode) {
+                                element[inode].className = "";
+                            }) : 
+                            element.className = "" ?
+                            undefined :
+                            jsHunt.fn.exception("resetStyle error, nodes is undefined !");
             } catch(err) {
                 console.error(err);
             }
             return this;
         },
 
-        addClass: function(classname, index) {
+        removeClass: function(classname, index) {
+            let _sel    = this.sel;
+            let keys    = (_sel) ? Object.keys(_sel) : "";
+            let element = (keys.length > 0) ? 
+                                (index) ? _sel[index] : _sel : 
+                            _sel;
             try {
-                (index && index >= 0) ? 
-                    (nodes[index].className.search(classname) >= 0 || 
-                     nodes[index].className.search(" " + classname) >= 0) ? "" : 
-                        nodes[index].className += " " + classname
-                        :
-                (nodes.length > 0) ? 
+                (index && index >= 0 && nodes.length > 0) ?
+                    nodes[index].classList.remove(classname) :
+                (nodes.length > 0 && !index) ? 
                     nodes.forEach(function(inode) {
-                        (
-                            inode.className.search(classname) >= 0 || 
-                            inode.className.search(" " + classname) >= 0
-                        ) ? "" : 
-                            inode.className += " " + classname
+                        inode.classList.remove(classname);
                     }) : (node) ?
-                        (
-                            node.className.search(classname) >= 0 ||
-                            node.className.search(" " + classname) >= 0
-                        ) ? "" : node.className += " " + classname
-                         : jsHunt.fn.exception("addClass error, nodes is undefined !");
-            } catch(err) {
-                console.error(err);
-            }
-            return this;
-        },
-
-        removeClass: function(classname) {
-            let _sel = this.sel;
-            let keys = Object.keys(_sel);
-            try {
-                (keys.length > 0) ?
-                    keys.forEach(function(i){
-                        (typeof _sel[i] !== "undefined") ? _sel[i].classList.remove(classname) : undefined;
-                    }) : jsHunt.fn.exception("Selector ("+this.selector+") not found");
+                        node.classList.remove(classname) : 
+                        (element.length > 0) ? 
+                            keys.forEach(function(inode) {
+                                element[inode].classList.remove(classname);
+                            }) : 
+                            element.classList.remove(classname) ? 
+                            undefined :  
+                            jsHunt.fn.exception("removeClass error, nodes is undefined !");
             } catch(err) {
                 console.error(err);
             }
